@@ -1,7 +1,12 @@
+import AppRouter from "./router/AppRouter";
+import AppTheme from "./theme/AppTheme";
+
 function JournalApp() {
   return (
     <>
-      <h1>Hello world!</h1>
+      <AppTheme>
+        <AppRouter />
+      </AppTheme>
     </>
   );
 }

@@ -5,7 +5,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks/useForm";
 import { checkingAuthentication, googleSignIn } from "../../store/auth/thunks";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export const LoginPage = () => {
   const dispatch = useDispatch();
@@ -14,6 +14,10 @@ export const LoginPage = () => {
     password: "",
   });
 
+  const status = useSelector((state) => state.auth.status);
+
+  const isChecking = status === "checking";
+  console.log(isChecking);
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(checkingAuthentication(email, password));
@@ -53,12 +57,22 @@ export const LoginPage = () => {
 
           <Grid container spacing={2} size={12}>
             <Grid size={{ xs: 12, md: 6 }}>
-              <Button variant="contained" fullWidth type="submit">
+              <Button
+                variant="contained"
+                fullWidth
+                type="submit"
+                disabled={isChecking}
+              >
                 <Typography>Login</Typography>
               </Button>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
-              <Button variant="contained" fullWidth onClick={onGoogleSignIn}>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={onGoogleSignIn}
+                disabled={isChecking}
+              >
                 <Google /> <Typography ml={1}>Google</Typography>
               </Button>
             </Grid>

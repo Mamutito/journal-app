@@ -31,7 +31,8 @@ export const useForm = (initialForm = {}, formValidations = {}) => {
     };
 
     createValidators();
-  }, [formState]); // Only re-run when formState or formValidations changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formState]);
 
   return {
     ...formState,

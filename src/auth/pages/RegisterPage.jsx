@@ -1,20 +1,25 @@
-import { Button, Link, TextField, Typography } from "@mui/material";
+import { Alert, Button, Link, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { Link as RouterLink } from "react-router-dom";
 import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks/useForm";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { emailPasswordSignIn } from "../../store/auth/thunks";
 
 export const RegisterPage = () => {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const formValidations = {
     email: [(value) => value.includes("@"), "Must insert a correct email."],
     password: [
-      (value) => value.length > 6,
+      (value) => value.length >= 6,
       "Password must be at least 6 characters long",
     ],
     displayName: [(value) => value.length >= 1, "Name is mandatory"],
   };
+  const dispatch = useDispatch();
+  const { status, errorMessage } = useSelector((state) => state.auth);
+  const isChecking = status === "checking";
 
   const {
     onInputChange,
@@ -38,7 +43,8 @@ export const RegisterPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsFormSubmitted(true);
-    console.log(formState);
+    if (!isFormValid) return;
+    dispatch(emailPasswordSignIn(formState));
   };
   return (
     <AuthLayout title="Register">
@@ -84,10 +90,24 @@ export const RegisterPage = () => {
               helperText={isFormSubmitted && passwordValid}
             />
           </Grid>
-
+          <Grid
+            container
+            spacing={2}
+            size={12}
+            display={errorMessage ? "" : "none"}
+          >
+            <Grid size={12}>
+              <Alert severity="error">{errorMessage}</Alert>
+            </Grid>
+          </Grid>
           <Grid container spacing={2} size={12}>
             <Grid size={12}>
-              <Button variant="contained" fullWidth type="submit">
+              <Button
+                variant="contained"
+                fullWidth
+                type="submit"
+                disabled={isChecking}
+              >
                 <Typography>Create account</Typography>
               </Button>
             </Grid>

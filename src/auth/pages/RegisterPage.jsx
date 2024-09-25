@@ -5,7 +5,7 @@ import { AuthLayout } from "../layout/AuthLayout";
 import { useForm } from "../../hooks/useForm";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { emailPasswordSignIn } from "../../store/auth/thunks";
+import { emailPasswordRegister } from "../../store/auth/thunks";
 
 export const RegisterPage = () => {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
@@ -44,7 +44,7 @@ export const RegisterPage = () => {
     e.preventDefault();
     setIsFormSubmitted(true);
     if (!isFormValid) return;
-    dispatch(emailPasswordSignIn(formState));
+    dispatch(emailPasswordRegister(formState));
   };
   return (
     <AuthLayout title="Register">

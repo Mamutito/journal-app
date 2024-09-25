@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
+  signInWithEmailAndPassword,
   signInWithPopup,
   updateProfile,
 } from "firebase/auth";
@@ -27,7 +28,7 @@ export const signInWithGoogle = async () => {
   }
 };
 
-export const signInWithEmailPassword = async ({
+export const registerWithEmailPassword = async ({
   email,
   password,
   displayName,
@@ -45,6 +46,24 @@ export const signInWithEmailPassword = async ({
     let errorMessage = error.message;
     if (error.message === "Firebase: Error (auth/email-already-in-use).") {
       errorMessage = "Email already in use.";
+    }
+    return { ok: false, error: errorMessage };
+  }
+};
+
+export const signInEmailPassword = async ({ email, password }) => {
+  try {
+    const resp = await signInWithEmailAndPassword(
+      firebaseAuth,
+      email,
+      password
+    );
+    const { uid, photoURL, displayName } = resp.user;
+    return { ok: true, email, password, uid, photoURL, displayName };
+  } catch (error) {
+    let errorMessage = error.message;
+    if (error.message === "Firebase: Error (auth/invalid-credential).") {
+      errorMessage = "Email or password is invalid.";
     }
     return { ok: false, error: errorMessage };
   }

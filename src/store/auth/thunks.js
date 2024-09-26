@@ -1,3 +1,4 @@
+import { firebaseAuth } from "../../firebase/config";
 import {
   registerWithEmailPassword,
   signInEmailPassword,
@@ -51,5 +52,16 @@ export const emailPasswordSignIn = ({ email, password }) => {
       return dispatch(logout(error));
     }
     dispatch(login({ email, password, displayName, photoURL, uid }));
+  };
+};
+
+export const startSignOut = () => {
+  return async (dispatch) => {
+    try {
+      await firebaseAuth.signOut();
+      dispatch(logout());
+    } catch (error) {
+      return dispatch(logout(error));
+    }
   };
 };
